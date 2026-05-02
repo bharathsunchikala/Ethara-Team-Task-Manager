@@ -1,10 +1,13 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
+import fs from "fs";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
@@ -13,8 +16,16 @@ import taskRoutes from "./routes/taskRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
+const defaultAllowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+  defaultAllowedOrigins.push(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+}
+
+const allowedOrigins = (process.env.CLIENT_URL || defaultAllowedOrigins.join(","))
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
@@ -59,6 +70,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      next();
+      return;
+    }
+
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

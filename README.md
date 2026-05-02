@@ -32,6 +32,18 @@ frontend/
 
 ## Setup
 
+### Root Scripts
+
+The repository includes a root `package.json` for deployment platforms such as Railway.
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+The root build script builds the React app. The root start script starts the Express API, which serves `frontend/dist` in production.
+
 ### Backend
 
 ```bash
@@ -53,6 +65,30 @@ npm run dev
 ```
 
 The frontend defaults to `http://localhost:5000/api`. Change `VITE_API_URL` if your API runs elsewhere.
+
+## Railway Deployment
+
+This repo is configured for a single Railway service from the repository root.
+
+Railway uses:
+
+- `railway.json`
+- root `package.json`
+- `npm run build`
+- `npm start`
+- health check path `/api/health`
+
+Required Railway variables:
+
+```env
+NODE_ENV=production
+MONGO_URI=your-mongodb-connection-string
+JWT_SECRET=replace-with-a-long-random-secret
+JWT_EXPIRES_IN=7d
+ALLOW_PUBLIC_ADMIN_SIGNUP=true
+```
+
+Do not set `PORT` on Railway; Railway provides it automatically.
 
 ## Environment Variables
 
