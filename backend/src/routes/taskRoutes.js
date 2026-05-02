@@ -8,6 +8,7 @@ import {
   updateTaskStatus
 } from "../controllers/taskController.js";
 import { authorize, protect } from "../middleware/authMiddleware.js";
+import { requireDatabase } from "../middleware/databaseMiddleware.js";
 import { validate } from "../middleware/validate.js";
 import {
   taskCreateSchema,
@@ -17,6 +18,7 @@ import {
 
 const router = express.Router();
 
+router.use(requireDatabase);
 router.use(protect);
 
 router

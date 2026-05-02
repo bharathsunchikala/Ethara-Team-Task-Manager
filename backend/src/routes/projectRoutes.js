@@ -9,6 +9,7 @@ import {
   updateProject
 } from "../controllers/projectController.js";
 import { authorize, protect } from "../middleware/authMiddleware.js";
+import { requireDatabase } from "../middleware/databaseMiddleware.js";
 import { validate } from "../middleware/validate.js";
 import {
   projectCreateSchema,
@@ -18,6 +19,7 @@ import {
 
 const router = express.Router();
 
+router.use(requireDatabase);
 router.use(protect);
 
 router

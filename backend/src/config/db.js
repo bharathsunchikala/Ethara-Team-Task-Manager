@@ -4,7 +4,11 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 let memoryServer;
 
 const connectDB = async () => {
-  let uri = process.env.MONGO_URI;
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  let uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.DATABASE_URL;
 
   if (!uri && process.env.NODE_ENV !== "production") {
     memoryServer = await MongoMemoryServer.create();
@@ -13,7 +17,7 @@ const connectDB = async () => {
   }
 
   if (!uri) {
-    throw new Error("MONGO_URI is required");
+    throw new Error("MONGO_URI or MONGO_URL is required");
   }
 
   mongoose.set("strictQuery", true);
