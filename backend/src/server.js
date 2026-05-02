@@ -4,16 +4,17 @@ import connectDB from "./config/db.js";
 
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-  await connectDB();
-
+const startServer = () => {
   const server = app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}`);
   });
 
+  connectDB().catch((error) => {
+    console.error("MongoDB connection failed:", error.message);
+  });
+
   process.on("unhandledRejection", (error) => {
     console.error("Unhandled rejection:", error);
-    server.close(() => process.exit(1));
   });
 
   process.on("uncaughtException", (error) => {

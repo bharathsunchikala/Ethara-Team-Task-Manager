@@ -5,6 +5,7 @@ import fs from "fs";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import mongoose from "mongoose";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -63,7 +64,13 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", service: "Ethara Team Task Manager API" });
+  const dbStates = ["disconnected", "connected", "connecting", "disconnecting"];
+
+  res.json({
+    status: "ok",
+    service: "Ethara Team Task Manager API",
+    database: dbStates[mongoose.connection.readyState] || "unknown"
+  });
 });
 
 app.use("/api/auth", authRoutes);
