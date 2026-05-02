@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import AnimatedEtharaMark from "../components/ui/AnimatedEtharaMark";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import Logo from "../components/ui/Logo";
@@ -37,6 +38,7 @@ const Login = () => {
     <main className="grid min-h-screen bg-slate-50 lg:grid-cols-[1fr_520px]">
       <section className="hidden bg-slate-950 p-10 text-white lg:flex lg:flex-col lg:justify-between">
         <Logo className="rounded-lg bg-white px-3 py-2" imageClassName="h-12" />
+        <AnimatedEtharaMark />
         <div className="max-w-xl">
           <p className="text-sm font-medium uppercase tracking-wide text-slate-300">
             Portfolio-ready MERN workspace
@@ -74,7 +76,7 @@ const Login = () => {
               value={form.password}
               onChange={(event) => setForm({ ...form, password: event.target.value })}
               error={errors.password}
-              placeholder="••••••••"
+              placeholder="********"
             />
             <Button className="w-full" type="submit" isLoading={submitting}>
               Log in

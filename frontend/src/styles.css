@@ -23,4 +23,157 @@
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2;
   }
+
+  .ethara-motion-stage {
+    position: relative;
+    display: flex;
+    height: min(38vh, 360px);
+    min-height: 260px;
+    width: min(58vw, 680px);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .ethara-motion-stage::before,
+  .ethara-motion-stage::after {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transform: skewX(-10deg);
+  }
+
+  .ethara-motion-stage::after {
+    inset: 24% 18%;
+    border-color: rgba(255, 255, 255, 0.1);
+    animation: ethara-frame-drift 7s ease-in-out infinite;
+  }
+
+  .ethara-motion-ring {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 9999px;
+  }
+
+  .ethara-motion-ring-one {
+    height: 210px;
+    width: 210px;
+    animation: ethara-ring-spin 12s linear infinite;
+  }
+
+  .ethara-motion-ring-two {
+    height: 290px;
+    width: 290px;
+    border-style: dashed;
+    opacity: 0.55;
+    animation: ethara-ring-spin 18s linear infinite reverse;
+  }
+
+  .ethara-motion-ring-one::before,
+  .ethara-motion-ring-two::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -3px;
+    height: 6px;
+    width: 34px;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.74);
+  }
+
+  .ethara-motion-scan {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    height: 1px;
+    width: 80%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+    animation: ethara-scan 3.8s ease-in-out infinite;
+  }
+
+  .ethara-motion-logo {
+    position: relative;
+    z-index: 2;
+    border-radius: 14px;
+    background: white;
+    padding: 0.85rem 1.1rem;
+    box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+    animation: ethara-logo-float 4.8s ease-in-out infinite;
+  }
+
+  .ethara-motion-shadow {
+    position: absolute;
+    bottom: 22%;
+    z-index: 1;
+    height: 14px;
+    width: 260px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.18);
+    filter: blur(14px);
+    animation: ethara-shadow-pulse 4.8s ease-in-out infinite;
+  }
+}
+
+@keyframes ethara-logo-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-18px) scale(1.02);
+  }
+}
+
+@keyframes ethara-shadow-pulse {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: scaleX(0.8);
+  }
+
+  50% {
+    opacity: 0.18;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ethara-ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ethara-frame-drift {
+  0%,
+  100% {
+    transform: translateX(-12px) skewX(-10deg);
+  }
+
+  50% {
+    transform: translateX(12px) skewX(-10deg);
+  }
+}
+
+@keyframes ethara-scan {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(-88px);
+  }
+
+  40%,
+  60% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(88px);
+  }
 }
