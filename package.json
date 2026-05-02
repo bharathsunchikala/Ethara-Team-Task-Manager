@@ -13,6 +13,9 @@
     "dev:backend": "npm run dev --workspace backend",
     "dev:frontend": "npm run dev --workspace frontend"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.60.2"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
