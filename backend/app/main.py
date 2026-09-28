@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     client.close()
 
 
-app = FastAPI(title="Ethara Task Manager API", lifespan=lifespan)
+app = FastAPI(title="Team Task Manager API", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in CLIENT_URL.split(",") if origin.strip()],
@@ -32,4 +32,4 @@ app.include_router(tasks.router, prefix="/api/v1/tasks")
 
 @app.get("/api/health")
 async def health_check() -> dict[str, str]:
-    return {"status": "ok", "service": "Ethara Task Manager API"}
+    return {"status": "ok", "service": "Team Task Manager API"}

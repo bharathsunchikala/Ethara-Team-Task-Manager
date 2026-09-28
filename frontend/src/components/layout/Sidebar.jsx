@@ -35,7 +35,7 @@ const Sidebar = ({ mobileOpen, onClose }) => (
       )}
     >
       <div className="flex h-16 items-center justify-between border-b border-slate-100 px-5">
-        <NavLink to="/dashboard" className="min-w-0" onClick={onClose} aria-label="Ethara.AI dashboard">
+        <NavLink to="/dashboard" className="min-w-0" onClick={onClose} aria-label="Team Task Manager dashboard">
           <Logo imageClassName="h-12 max-w-[210px]" />
         </NavLink>
         <Button className="lg:hidden" variant="ghost" size="icon" onClick={onClose} aria-label="Close sidebar">

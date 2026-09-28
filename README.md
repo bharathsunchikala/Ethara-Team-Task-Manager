@@ -1,4 +1,4 @@
-# Ethara Team Task Manager
+# Team Task Manager
 
 A production-style project management application with JWT authentication, role-based access control, project membership, task assignment, dashboard analytics, overdue tracking, filtering, pagination, and a responsive React UI. The existing Node.js API remains the default production backend; an optional FastAPI service provides a Python API and AI task-assignee recommendations.
 
