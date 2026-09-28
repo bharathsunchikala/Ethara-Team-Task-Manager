@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/ethara_team_task_manager
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the environment}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:5173}
+      PORT: 8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  mongo_data:

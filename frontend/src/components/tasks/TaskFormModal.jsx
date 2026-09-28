@@ -4,8 +4,10 @@ import Input from "../ui/Input";
 import Modal from "../ui/Modal";
 import Select from "../ui/Select";
 import Textarea from "../ui/Textarea";
+import LoadingSpinner from "../ui/LoadingSpinner";
 import { priorityOptions, statusOptions } from "../../utils/taskMeta";
 import { todayInputValue } from "../../utils/format";
+import { tasksApi } from "../../api/tasks";
 
 const blankForm = {
   title: "",
@@ -33,6 +35,7 @@ const TaskFormModal = ({
 }) => {
   const [form, setForm] = useState(blankForm);
   const [errors, setErrors] = useState({});
+  const [isRecommending, setIsRecommending] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -64,6 +67,19 @@ const TaskFormModal = ({
   );
 
   const members = selectedProject?.members || [];
+
+  const handleRecommend = async () => {
+    if (!initialValue?._id || isRecommending) return;
+
+    setIsRecommending(true);
+    tasksApi
+      .recommendAssignee(initialValue._id)
+      .then(({ data }) =>
+        setForm((current) => ({ ...current, assignedTo: data.recommended_user_id }))
+      )
+      .catch(() => undefined)
+      .finally(() => setIsRecommending(false));
+  };
 
   useEffect(() => {
     if (!open || !selectedProject) return;
@@ -138,19 +154,35 @@ const TaskFormModal = ({
               </option>
             ))}
           </Select>
-          <Select
-            label="Assignee"
-            value={form.assignedTo}
-            onChange={(event) => setForm({ ...form, assignedTo: event.target.value })}
-            error={errors.assignedTo}
-          >
-            <option value="">Select assignee</option>
-            {members.map((member) => (
-              <option key={member._id} value={member._id}>
-                {member.name}
-              </option>
-            ))}
-          </Select>
+          <div>
+            <Select
+              label="Assignee"
+              value={form.assignedTo}
+              onChange={(event) => setForm({ ...form, assignedTo: event.target.value })}
+              error={errors.assignedTo}
+            >
+              <option value="">Select assignee</option>
+              {members.map((member) => (
+                <option key={member._id} value={member._id}>
+                  {member.name}
+                </option>
+              ))}
+            </Select>
+            {initialValue?._id && (
+              <div className="mt-2 flex min-h-9 items-center gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleRecommend}
+                  isLoading={isRecommending}
+                >
+                  Suggest assignee
+                </Button>
+                {isRecommending && <LoadingSpinner label="Finding a match" />}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">

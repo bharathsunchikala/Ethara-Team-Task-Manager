@@ -1,0 +1,7 @@
+description,assignee_id
+Design the homepage layout and visual components,sample-user-design
+Create interface color palette typography and icons,sample-user-design
+Review frontend responsive styling and accessibility,sample-user-design
+Implement API authentication and token validation,sample-user-backend
+Fix MongoDB query performance and database indexes,sample-user-backend
+Build task assignment and project endpoints,sample-user-backend
