@@ -19,7 +19,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    const message = error.response?.data?.message || "Something went wrong";
+    const message = error.response?.data?.message || error.response?.data?.detail || "Something went wrong";
 
     if (status === 401) {
       localStorage.removeItem("ethara_token");

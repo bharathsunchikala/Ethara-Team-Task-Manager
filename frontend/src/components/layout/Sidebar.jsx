@@ -1,5 +1,6 @@
 import {
   FolderKanban,
+  Bot,
   LayoutDashboard,
   ListTodo,
   User,
@@ -15,6 +16,7 @@ const navigation = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Projects", href: "/projects", icon: FolderKanban },
   { label: "Tasks", href: "/tasks", icon: ListTodo },
+  { label: "AI Copilot", href: "/ai-copilot", icon: Bot },
   { label: "Team", href: "/team", icon: Users },
   { label: "Profile", href: "/profile", icon: User }
 ];

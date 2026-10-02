@@ -3,6 +3,7 @@ import AppLayout from "./components/layout/AppLayout";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 import { useAuth } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
+import AICopilot from "./pages/AICopilot";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
@@ -55,6 +56,7 @@ const App = () => (
     >
       <Route index element={<Navigate to="/dashboard" replace />} />
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="ai-copilot" element={<AICopilot />} />
       <Route path="projects" element={<Projects />} />
       <Route path="projects/:id" element={<ProjectDetails />} />
       <Route path="tasks" element={<Tasks />} />

@@ -82,7 +82,7 @@ copy .env.example .env
 npm run dev
 ```
 
-The frontend defaults to `http://localhost:5000/api`. Change `VITE_API_URL` if your API runs elsewhere.
+The frontend defaults to `http://localhost:5000/api`. Change `VITE_API_URL` if your API runs elsewhere. Set `VITE_FASTAPI_URL=http://localhost:8000/api/v1` to use FastAPI AI features.
 
 ## Railway Deployment
 
@@ -191,11 +191,38 @@ All FastAPI endpoints are prefixed with `/api/v1`; all routes except registratio
 - `GET /api/v1/projects/{id}/stats`
 - `GET /api/v1/tasks`, `POST /api/v1/tasks`, `GET /api/v1/tasks/{id}`, `PATCH /api/v1/tasks/{id}`, `DELETE /api/v1/tasks/{id}`
 - `POST /api/v1/tasks/{id}/recommend`
+- `POST /api/v1/ai/project-plan`
 - `GET /api/health`
 
 ### AI Feature
 
-`backend/app/ai/trainer.py` trains a TF-IDF and Logistic Regression model from `backend/app/ai/tasks_training.csv` and writes `model.joblib`. Train with `python -m app.ai.trainer` from `backend`. Replace the sample labels with real Mongo user IDs before relying on model predictions. Recommendations are restricted to the task project's members; if the model is missing or predicts an ineligible user, the API safely chooses an eligible member and returns zero confidence.
+The authenticated **AI Project Copilot** turns a goal into a structured delivery plan grounded in tasks from the selected project. In the React app, open **AI Copilot**, select a project, and describe the outcome. The API checks project membership before reading tasks, retrieves up to six relevant records with TF-IDF, sends bounded project/task context to the configured provider, validates the response with Pydantic, and rejects task citations that were not in the retrieved evidence. It returns the plan, source evidence, provider/model, latency, and token usage. Task descriptions are treated as untrusted data, not instructions.
+
+The service has two provider modes:
+
+- `AI_PROVIDER=demo` (default) runs a deterministic offline planner for local development and CI. It makes no external model calls and does not require a key.
+- `AI_PROVIDER=openai` uses the OpenAI Chat Completions API with JSON output. Configure `OPENAI_API_KEY` and optionally `OPENAI_MODEL`; `OPENAI_BASE_URL` can target an OpenAI-compatible gateway. Keep keys out of source control.
+
+From `backend`, copy `.env.example` to `.env`, install `requirements-dev.txt`, then run `python -m uvicorn app.main:app --reload`. The React client already attaches the current bearer token to the AI request. Visit `/docs` for the endpoint schema.
+
+#### Evaluation
+
+The checked-in golden set is `backend/evals/project_plan_cases.jsonl`. Run the deterministic benchmark from `backend`:
+
+```bash
+python -m app.ai.evaluate --provider demo
+```
+
+Run the same cases against a configured live model with `--provider openai`. The JSON report includes schema pass rate, retrieval recall@6, citation precision, required-term coverage, and mean latency. CI runs the demo benchmark without secrets. The included dataset is intentionally small and synthetic; its 100% scores are smoke-test evidence only, not a production quality claim. Expand and review the golden set with representative, permission-safe project examples before using these metrics to compare models or prompts.
+
+#### Portfolio Talking Points
+
+- Retrieval-augmented generation over permission-filtered Mongo project data, with a lightweight TF-IDF retriever and explicit source citations.
+- Structured generation, schema validation, bounded context/output, untrusted-context instruction, and rejection of unsupported citations.
+- Provider abstraction with a no-key demo mode, OpenAI-compatible configuration, request latency/token metadata, and regression evaluation in CI.
+- Human review remains in the loop: the Copilot proposes a plan but does not create or assign tasks automatically.
+
+The existing `backend/app/ai/trainer.py` remains a separate classical ML feature: TF-IDF plus Logistic Regression for assignee recommendation. Replace its sample CSV labels with real Mongo user IDs before training a model for meaningful assignment predictions.
 
 ### FastAPI Deployment
 

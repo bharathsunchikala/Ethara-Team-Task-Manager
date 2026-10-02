@@ -21,6 +21,7 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - run: ruff check app tests
       - run: pytest -q
+      - run: python -m app.ai.evaluate --provider demo
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
         with:
